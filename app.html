@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JUST IN ONE — Essential Delivery</title>
+  <link href="https://googleapis.com" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #0f766e;
+      --primary-dark: #115e59;
+      --primary-light: #ccfbf1;
+      --accent: #f59e0b;
+      --bg: #f1f5f9;
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #64748b;
+      --border: #e2e8f0;
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    body {
+      margin: 0;
+      background: linear-gradient(135deg, #cbd5e1 0%, #94a3b8 100%);
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    .app-frame {
+      width: 100%;
+      max-width: 430px;
+      background: var(--bg);
+      min-height: 100vh;
+      box-shadow: 0 25px 60px rgba(15, 23, 42, 0.25);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    .hidden { display: none !important; }
+
+    /* ==========================================
+       1. SPLASH LOGO SCREEN
+    ========================================== */
+    #splashScreen {
+      flex: 1;
+      background: linear-gradient(160deg, #0f766e 0%, #064e3b 100%);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 30px;
+      text-align: center;
+      animation: fadeIn 0.4s ease;
+    }
+
+    .logo-circle {
+      width: 110px;
+      height: 110px;
+      background: rgba(255, 255, 255, 0.14);
+      backdrop-filter: blur(10px);
+      border: 3px solid rgba(255, 255, 255, 0.35);
+      border-radius: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 22px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+      animation: pulseLogo 2s infinite ease-in-out;
+    }
+
+    @keyframes pulseLogo {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    .brand-title {
+      font-size: 34px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      margin: 0;
+    }
+
+    .brand-title span { color: #fbbf24; }
+
+    .brand-tagline {
+      margin: 10px 0 30px;
+      font-size: 15px;
+      color: #ccfbf1;
+      line-height: 1.5;
+    }
+
+    .loader-bar {
+      width: 180px;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+
+    .loader-fill {
+      height: 100%;
+      width: 0%;
+      background: #fbbf24;
+      border-radius: 99px;
+      animation: loadProgress 2s forwards ease-in-out;
+    }
+
+    @keyframes loadProgress {
+      0% { width: 0%; }
+      100% { width: 100%; }
+    }
+
+    /* ==========================================
+       2. ACCOUNT SETUP / LOGIN SCREEN
+    ========================================== */
+    .top-banner {
+      background: linear-gradient(135deg, #0f766e 0%, #0d9488 100%);
+      color: white;
+      padding: 26px 20px 30px;
+      border-bottom-left-radius: 28px;
+      border-bottom-right-radius: 28px;
+      text-align: center;
+      box-shadow: 0 10px 25px rgba(15, 118, 110, 0.2);
+    }
+
+    .mini-logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 22px;
+      font-weight: 800;
+    }
+
+    .mini-logo span { color: #fbbf24; }
+
+    .screen {
+      padding: 20px;
+      flex: 1;
+      animation: fadeIn 0.35s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 20px;
+      padding: 22px;
+      box-shadow: 0 6px 20px rgba(15, 23, 42, 0.06);
+      margin-bottom: 16px;
+    }
+
+    .role-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      background: #f1f5f9;
+      padding: 6px;
+      border-radius: 14px;
+      margin-bottom: 18px;
+    }
+
+    .role-tab {
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      background: transparent;
+      color: var(--muted);
+      transition: 0.2s;
+    }
+
+    .role-tab.active {
+      background: white;
+      color: var(--primary);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .field { margin-bottom: 14px; }
+    .field label {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 14px 15px;
+      font-size: 15px;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      background: #f8fafc;
+      outline: none;
+      transition: 0.2s;
+    }
+
+    input:focus, textarea:focus {
+      border-color: var(--primary);
+      background: white;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 16px;
+      border: none;
+      border-radius: 14px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: 0.15s;
+    }
+
+    .btn:active { transform: scale(0.98); }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #0f766e, #0d9488);
+      color: white;
+      box-shadow: 0 8px 20px rgba(15, 118, 110, 0.28);
+    }
+
+    .btn-voice {
+      background: #fef3c7;
+      color: #b45309;
+      border: 2px solid #fde68a;
+      margin-top: 10px;
+      padding: 12px;
+      font-size: 15px;
+    }
+
+    /* ==========================================
+       3. MAIN APP INTERFACE
+    ========================================== */
+    .user-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: white;
+      padding: 14px 16px;
+      border-radius: 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+    }
+
+    .switch-btn {
+      background: #f1f5f9;
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 8px 12px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .cat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .cat-box {
+      background: #f8fafc;
+      border: 2px solid var(--border);
+      border-radius: 16px;
+      padding: 16px 10px;
+      text-align: center;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .cat-box .icon { font-size: 28px; display: block; margin-bottom: 6px; }
+    .cat-box .label { font-size: 14px; font-weight: 700; }
+
+    .cat-box.selected {
+      background: var(--primary-light);
+      border-color: var(--primary);
+      color: var(--primary-dark);
+      transform: translateY(-2px);
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .chip {
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      padding: 6px 12px;
+      border-radius: 99px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .chip:hover {
+      background: var(--primary-light);
+      border-color: var(--primary);
+    }
+
+    .order-card {
+      background: white;
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 12px;
+      border-left: 5px solid var(--primary);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+    }
+
+    .status-tag {
+      display: inline-block;
+      padding: 5px 10px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      background: #fef3c7;
+      color: #b45309;
+      margin-bottom: 6px;
+    }
+
+    .status-tag.done {
+      background: #dcfce7;
+      color: #15803d;
+    }
+
+    .shop-btns {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .shop-btns button {
+      padding: 10px 6px;
+      border: none;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 700;
+      color: white;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-frame">
+
+  <!-- ================================================= -->
+  <!-- 1. SPLASH LOGO SCREEN                             -->
+  <!-- ================================================= -->
+  <div id="splashScreen">
+    <div class="logo-circle">
+      <svg width="62" height="62" viewBox="0 0 64 64" fill="none" xmlns="http://w3.org">
+        <path d="M16 24C16 17.3726 21.3726 12 28 12H36C42.6274 12 48 17.3726 48 24V26H16V24Z" stroke="#FBBF24" stroke-width="4" stroke-linecap="round"/>
+        <rect x="12" y="24" width="40" height="30" rx="8" fill="white"/>
+        <path d="M32 32V46M25 39H39" stroke="#0F766E" stroke-width="4.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <h1 class="brand-title">JUST <span>IN ONE</span></h1>
+    <p class="brand-tagline" id="splashSubtitle">Connecting your neighborhood shops & care</p>
+    <div class="loader-bar">
+      <div class="loader-fill"></div>
+    </div>
+  </div>
+
+  <!-- ================================================= -->
+  <!-- 2. CREATE ACCOUNT SCREEN (SAVES TO BACKEND)       -->
+  <!-- ================================================= -->
+  <div id="authScreen" class="hidden" style="display:flex; flex-direction:column; flex:1;">
+    <div class="top-banner">
+      <div class="mini-logo">🛍️ JUST <span>IN ONE</span></div>
+      <p style="margin:6px 0 0; font-size:13px; color:#ccfbf1;">Create your account once to get started</p>
+    </div>
+
+    <div class="screen">
+      <div class="card">
+        <h2 style="margin:0 0 6px; font-size:20px;">Create Account ✨</h2>
+        <p style="margin:0 0 16px; font-size:13px; color:var(--muted);">Your details are saved securely in our backend</p>
+
+        <div class="role-tabs">
